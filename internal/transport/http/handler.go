@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Handler struct {
@@ -20,6 +21,7 @@ type Handler struct {
 func NewHandler() *Handler {
 	h := &Handler{}
 	h.Router = chi.NewRouter()
+	h.Router.Use(middleware.Logger)
 	h.mapRoutes()
 
 	h.Server = &http.Server{
@@ -33,6 +35,9 @@ func NewHandler() *Handler {
 func (h *Handler) mapRoutes() {
 	h.Router.Get("/alive", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello")
+	})
+	h.Router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World!"))
 	})
 }
 
